@@ -3,11 +3,12 @@ Assignment: Project 3
 Author: Ian Davidson
 Description: Lets user enter name of file(.gif) to be placed in the graphic window. Gives selections of
 what should be done to image. After user picks an option, text display turns to processing. Operation is done
-to image, shown, then asked what the file should be saved as.
+to image, shown, then asked what the name the file should be saved as.
 '''
 from graphics import*
 import sys
 import time
+import random
 
 string1 = 'a. Invert the colors'
 string2 = 'b. Switch the RGB channels'
@@ -87,17 +88,31 @@ def transform(image, clicked_idx, min_max):
     iterates through each pixel 2d nested for loop. calls specific transformer function depending on button clicked
     returns new image object
     """
+    if clicked_idx == 1:
+        #rand_change
+
     image.undraw()
+
+    #iterates through all pixels going col by col from left to right
     for i in range(image.getWidth()):
         for j in range(image.getHeight()):
+
+            #invert colors
             rgb = image.getPixel(i,j)
             if clicked_idx == 0:
+
                 rgb = invert_pixel_color(rgb)
+
+            #switch rgb
             elif clicked_idx == 1:
-                rgb = switch_rgb_channels(rgb)
+                rgb = switch_rgb_channels(rgb, rand_change)
+
+            #contrast change
             elif clicked_idx == 2:
                 for g in range(3):
                     rgb[g] = normalize(rgb[g], min_max[g][0], min_max[g][1])
+
+            #turn list to color object, set pixel
             rgb = color_rgb(rgb[0], rgb[1], rgb[2])
             image.setPixel(i, j, rgb)
 
@@ -121,12 +136,9 @@ def switch_rgb_channels(rgb):
     function returns the new rgb list of colors for the pixel]
     returns newly modified pixel
     """
-    new_pix = rgb
-    new_pix[0] = rgb[2]
-    new_pix[1] = rgb[0]
-    new_pix[2] = rgb[1]
+    rgb = random.sample(range(0,3), 3)
 
-    return  new_pix
+    return  rgb
 
 def find_min_max(image):
     """
@@ -191,17 +203,19 @@ def save_file(image):
     parameter: string variable entered by user
     function: saves image file into current directory, checks for errors, if any found ends program
     """
-    output_filename = input("Enter name for output file, followed by .jpeg or .gif: ")
+    output_filename = input("Enter name for output file, followed by .gif: ")
     try:
         image.save(output_filename)
     except tk.TclError as e:
         print('stop making python cry, come on: ', e)
         sys.exit()
+
+
 def main():
 
     file_name = input("Name of image to be opened: ")
 
-    #function opens file and if catches tk.TclError exits
+    #function opens file and if catches an error exits
     img = open_file(file_name)
 
 
@@ -212,16 +226,16 @@ def main():
     dx = img.getWidth()/2
     buttonx = 2*w/3
     buttony = 2*h/3
-    buttonxy = Point(buttonx,buttony)
-    button2xy = Point(buttonx,buttony + 35)
-    button3xy = Point(buttonx,buttony + 35*2)
-    button_coor_list = [buttonxy, button2xy, button3xy]
+    button_coor_list = [Point(buttonx,buttony), Point(buttonx,buttony + 35), Point(buttonx,buttony + 35*2)]
     win = GraphWin("Click to continue...", w, h)
     img.draw(win)
     img.move(dx,dy)
     chosen = False
+
     click_point = win.getMouse() #waits for first click
-    #draw buttons--saves to variables
+
+
+    #draw buttons--saves to variables, then list
     buttonlist = []
     for i in range(3):
         button = draw_button(win, button_coor_list[i],button_string_list[i], chosen)
@@ -229,8 +243,10 @@ def main():
     #check if/which click is inside which button
     clicked_idx = wait_for_button(win, buttonlist)
 
+
     chosen = True
     button_trans = draw_button(win, button_coor_list[clicked_idx], button_string_list[clicked_idx], chosen)
+
     # do transformation based off of iteration in for loop
     min_max = None
     if clicked_idx == 2:
@@ -245,8 +261,7 @@ def main():
     #close window
     win.close()
 
-
+    #saves file and catches error
     save_file(new_image)
-    time.sleep(5)
 
 main()
