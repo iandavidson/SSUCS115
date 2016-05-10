@@ -88,8 +88,11 @@ def transform(image, clicked_idx, min_max):
     iterates through each pixel 2d nested for loop. calls specific transformer function depending on button clicked
     returns new image object
     """
+
+    #for switch rgb to work properly the function needs to iterate through the pixels
+
     if clicked_idx == 1:
-        #rand_change
+        image = switch_rgb_channels(image)
 
     image.undraw()
 
@@ -103,9 +106,7 @@ def transform(image, clicked_idx, min_max):
 
                 rgb = invert_pixel_color(rgb)
 
-            #switch rgb
-            elif clicked_idx == 1:
-                rgb = switch_rgb_channels(rgb, rand_change)
+            #for switch rgb to work properly the function needs to iterate through the pixels
 
             #contrast change
             elif clicked_idx == 2:
@@ -118,6 +119,28 @@ def transform(image, clicked_idx, min_max):
 
     return image
 
+def switch_rgb_channels(image):
+    """
+    parameter: image object is passed
+    function switches same values of RGB channels for entire picture by iterating through pixels
+    returns newly modified image
+    """
+    #using the values to be randomized
+    list = ['red', 'green', 'blue']
+    random.shuffle(list)
+
+
+    for i in range(image.getWidth()):
+            for j in range(image.getHeight()):
+
+                rgb = image.getPixel(i,j)
+                rgb = color_rgb(rgb[list.index('red')], rgb[list.index('green')], rgb[list.index('blue')])
+                image.setPixel(i, j, rgb)
+
+    return  image
+
+
+
 def invert_pixel_color(rgb):
     """
     parameter: single pixel's color list with values out of 255 for red, green, blue
@@ -129,16 +152,6 @@ def invert_pixel_color(rgb):
         new_pix[i] = (255- rgb[i])
     return new_pix
 
-def switch_rgb_channels(rgb):
-    """
-    parameter: single pixel's color list with values out of 255 for red, green, blue
-    function switches values of RGB channels
-    function returns the new rgb list of colors for the pixel]
-    returns newly modified pixel
-    """
-    rgb = random.sample(range(0,3), 3)
-
-    return  rgb
 
 def find_min_max(image):
     """
