@@ -75,11 +75,14 @@ def normalize(val, minval, maxval):
     Returns the normalized value after checking for out of bounds error.
     """
     norm = 255*(val - minval)/(maxval-minval)
+
+
+    #add in the +25 and -25?
     if (norm < 0):
         norm = 0
     elif (norm > 255):
         norm = 255
-    return norm
+    return int(norm)
 
 
 def transform(image, clicked_idx, min_max):
