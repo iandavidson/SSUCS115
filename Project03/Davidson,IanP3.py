@@ -103,8 +103,9 @@ def transform(image, clicked_idx, min_max):
     for i in range(image.getWidth()):
         for j in range(image.getHeight()):
 
-            #invert colors
             rgb = image.getPixel(i,j)
+
+            #invert colors
             if clicked_idx == 0:
 
                 rgb = invert_pixel_color(rgb)
@@ -114,7 +115,7 @@ def transform(image, clicked_idx, min_max):
             #contrast change
             elif clicked_idx == 2:
                 for g in range(3):
-                    rgb[g] = normalize(rgb[g], min_max[g][0] - 25, min_max[g][1] + 25 )
+                    rgb[g] = normalize(rgb[g], min_max[g][0] + 25, min_max[g][1] - 25 )
 
             #turn list to color object, set pixel
             rgb = color_rgb(int(rgb[0]), int(rgb[1]), int(rgb[2]))
@@ -134,13 +135,13 @@ def switch_rgb_channels(image):
 
 
     for i in range(image.getWidth()):
-            for j in range(image.getHeight()):
+        for j in range(image.getHeight()):
 
-                rgb = image.getPixel(i,j)
-                rgb = color_rgb(rgb[list.index('red')], rgb[list.index('green')], rgb[list.index('blue')])
-                image.setPixel(i, j, rgb)
+            rgb = image.getPixel(i,j)
+            rgb = color_rgb(rgb[list.index('red')], rgb[list.index('green')], rgb[list.index('blue')])
+            image.setPixel(i, j, rgb)
 
-    return  image
+    return image
 
 
 
@@ -182,15 +183,8 @@ def find_min_max(image):
                 if pix_rgb_list[i] <= min_list[i]:
                     min_list[i] = pix_rgb_list[i]
 
-    print([min_list[0], max_list[0]], [min_list[1], max_list[1]], [min_list[2], max_list[2]])
     return ([min_list[0], max_list[0]], [min_list[1], max_list[1]], [min_list[2], max_list[2]])
 
-
-def increase_the_contrast():
-    """
-    parameter: single pixel's color list with values out of 255 for red, green, blue.
-    function: take a single pixel and increases the contrast
-    """
 
 
 def open_file(filename):
