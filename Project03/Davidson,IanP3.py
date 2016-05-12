@@ -91,13 +91,13 @@ def transform(image, clicked_idx, min_max):
     iterates through each pixel 2d nested for loop. calls specific transformer function depending on button clicked
     returns new image object
     """
+    image.undraw()
+
+
 
     #for switch rgb to work properly the function needs to iterate through the pixels
-
     if clicked_idx == 1:
         image = switch_rgb_channels(image)
-
-    image.undraw()
 
     #iterates through all pixels going col by col from left to right
     for i in range(image.getWidth()):
@@ -118,7 +118,7 @@ def transform(image, clicked_idx, min_max):
                     rgb[g] = normalize(rgb[g], min_max[g][0] + 25, min_max[g][1] - 25 )
 
             #turn list to color object, set pixel
-            rgb = color_rgb(int(rgb[0]), int(rgb[1]), int(rgb[2]))
+            rgb = color_rgb(rgb[0], rgb[1], rgb[2])
             image.setPixel(i, j, rgb)
 
     return image
@@ -176,10 +176,11 @@ def find_min_max(image):
             pix_rgb_list = image.getPixel(x, y)
             for i in range(3):
 
+                #checking for max
                 if pix_rgb_list[i] >= max_list[i]:
                     max_list[i] = pix_rgb_list[i]
 
-
+                #cheking for min
                 if pix_rgb_list[i] <= min_list[i]:
                     min_list[i] = pix_rgb_list[i]
 
@@ -265,7 +266,9 @@ def main():
     new_image = transform(img, clicked_idx, min_max)
     new_image.draw(win)
 
-    time.sleep(5)
+
+    #waits for a click
+    win.getMouse()
 
     #close window
     win.close()
