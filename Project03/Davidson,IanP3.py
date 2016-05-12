@@ -205,8 +205,6 @@ def open_file(filename):
         sys.exit()
     return img
 
-#def gwin_setup(image):
-
 
 def save_file(image):
     """
@@ -229,7 +227,7 @@ def main():
     img = open_file(file_name)
 
 
-    #gwin_setup(img)
+
     w = img.getWidth()
     h = img.getHeight()
     dy = img.getHeight()/2
@@ -245,7 +243,7 @@ def main():
     click_point = win.getMouse() #waits for first click
 
 
-    #draw buttons--saves to variables, then list
+    #draw buttons--saves to variables, then appends to list
     buttonlist = []
     for i in range(3):
         button = draw_button(win, button_coor_list[i],button_string_list[i], chosen)
@@ -254,6 +252,7 @@ def main():
     clicked_idx = wait_for_button(win, buttonlist)
 
 
+    #sets "processing..." to text of clicked button
     chosen = True
     button_trans = draw_button(win, button_coor_list[clicked_idx], button_string_list[clicked_idx], chosen)
 
